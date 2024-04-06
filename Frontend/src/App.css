@@ -1,0 +1,21 @@
+body {
+  width: 600px; 
+  height: 600px; 
+}
+
+.cropper-container{
+  width: 550px;
+  padding: 20px;
+}
+
+img{
+  width: 550px;
+  padding: 20px;
+}
+
+button {
+  background-color: #ffffff;
+  text-align: center;
+  align-self: center;
+}
+

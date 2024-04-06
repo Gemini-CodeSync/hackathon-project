@@ -1,0 +1,30 @@
+{
+    "manifest_version": 3,
+    "name": "Gemini CodeSync",
+    "version": "1.0.0",
+    "description": "improve your code understanding through Gemini Ai assistant",
+    "icons": {
+        "16": "gemini.png",
+        "48": "gemini.png",
+        "128": "gemini.png"
+    },
+    "action":{
+        "default_icon":{
+            "16": "gemini.png",
+            "24": "gemini.png",
+            "32": "gemini.png"
+        },
+        "default_title": "CodeSync",
+        "default_popup": "index.html"
+    },
+    "permissions": [
+        "scripting",
+        "tabs",
+        "storage",
+        "activeTab"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ]
+}
