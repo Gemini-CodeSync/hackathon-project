@@ -12,9 +12,12 @@
   "dependencies": {
     "@google-cloud/vision": "^4.1.0",
     "@recogito/annotorious": "^2.7.13",
+    "@types/react-router": "^5.1.20",
+    "@types/react-router-dom": "^5.3.3",
     "react": "^18.2.0",
     "react-advanced-cropper": "^0.19.6",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3",
     "tesseract.js": "^5.0.5"
   },
   "devDependencies": {

@@ -1,0 +1,92 @@
+.screenshot-h1{
+    color:rgb(140, 139, 138);
+    margin-top:0px;
+}
+
+.new-container{
+    display:flex;
+    margin-left:10%;
+}
+
+.explanation-h1{
+    margin-bottom:5px;
+}
+
+.btn-home{
+    margin-left:28%;
+    color:white;
+}
+
+.btn-snip{
+    margin-right: 2%;
+}
+
+.btn-confirm{
+    margin-right: 2%;
+}
+
+.btn-restart{
+    margin-right: 2%;
+}
+
+.a-home{
+    color:white;    
+}
+
+.original-img{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.confirm-a, .snip-a, .restart-a{
+    text-decoration: none;
+    color:white;
+}
+
+.results-box {
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    margin-left: 0px;
+  }
+  
+  .results-scroll {
+    max-height: 230px;
+    overflow-y: auto;
+  }
+  
+  .chat-message {
+    margin-bottom: 10px;
+  }
+  
+  .user-message {
+    background-color: #e5f7ff;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 80%; 
+    float: right;
+    clear: both;
+  }
+  
+  .bot-message {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 80%; 
+    float: left;
+    clear: both;
+  }
+  
+  .input-box {
+    margin-top: 20px;
+  }
+  
+  .input-box input[type='text'] {
+    width: calc(100% - 40px); /* Adjust as needed */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+  }
+  
