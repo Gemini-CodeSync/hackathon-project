@@ -16,6 +16,8 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_URI);
 //Parse JSON data in request bodies 
 app.use(bodyParser.json());
 
+let responseToSend = '';
+
 //Receive data sent to /performOCR and sent to Gemini model
 app.post('/performOCR', (req, res) => {
 
@@ -45,8 +47,6 @@ app.post('/performOCR', (req, res) => {
     console.log('Image saved successfully');
     res.json({ message: 'Image received and saved successfully' });
 
-    //perform communication with Google AI models
-
     //get gemini-pro-vision model gemini AI models
     const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
     const prompt= "Explain it to me like I'm 5. I have 0 knowledge of python so please tailor answer to my proficiency.Also explain some code concepts if possible"
@@ -55,10 +55,19 @@ app.post('/performOCR', (req, res) => {
     const myImage = fileToGenerativePart("image.png", "image/png");
     const result = await model.generateContent([prompt, myImage]);
     const response = await result.response;
-    const text = response.text();
-    console.log(text);
+    const responseText = response.text();
+    responseToSend = responseText;
+    console.log(responseText);
   });
 });
+
+app.get('/getDataResponse', (req, res)=>{
+  if(responseToSend== '')
+  {
+    res.json({response: 'no data to send, sorry!'});
+  }
+  res.json({response: responseToSend});
+})
 
 //start listening on given port
 app.listen(port, () => {
