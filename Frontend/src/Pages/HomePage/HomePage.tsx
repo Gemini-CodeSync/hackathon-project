@@ -8,8 +8,10 @@ const HomePage = () => {
 
     <p>Hit Scan now and let the magic happen!</p>
 
-    <button className='scan-btn'><a href='#/screenshot' className='Scan-a'>Scan now</a></button>
+    <button className='scan-btn'><a href='#/screenshot'>Scan Now</a></button>
+
     <p><b>OR</b></p>
+
     <button className='secondary-btn'><a href='#/github'>Sign in with Github</a></button>
     <p className='premium-feat'>*premium features</p><br/>
 

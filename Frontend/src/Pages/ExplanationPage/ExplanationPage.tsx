@@ -25,7 +25,7 @@ const ExplanationPage = () => {
         </div>
       </div>
 
-      
+
 
       <button className='send-q-btn'>Send Question</button>
       <button className='return-home'>Return Home</button>
