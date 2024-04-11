@@ -16,7 +16,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_URI);
 //Parse JSON data in request bodies 
 app.use(bodyParser.json());
 
-let responseToSend = '';
+var responseToSend = '';
 
 //Receive data sent to /performOCR and sent to Gemini model
 app.post('/performOCR', (req, res) => {
@@ -45,29 +45,62 @@ app.post('/performOCR', (req, res) => {
     }
 
     console.log('Image saved successfully');
-    res.json({ message: 'Image received and saved successfully' });
-
-    //get gemini-pro-vision model gemini AI models
-    const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
-    const prompt= "Explain it to me like I'm 5. I have 0 knowledge of python so please tailor answer to my proficiency.Also explain some code concepts if possible"
-  
-    // send image data for suitable conversion
-    const myImage = fileToGenerativePart("image.png", "image/png");
-    const result = await model.generateContent([prompt, myImage]);
-    const response = await result.response;
-    const responseText = response.text();
-    responseToSend = responseText;
-    console.log(responseText);
+    res.json({ message: 'success' });
   });
 });
 
-app.get('/getDataResponse', (req, res)=>{
-  if(responseToSend== '')
-  {
-    res.json({response: 'no data to send, sorry!'});
+app.get('/getDataResponse', async(req, res) => {
+
+      //get gemini-pro-vision model gemini AI models
+      const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+      const prompt= "Explain it to me like I'm 5. I have 0 knowledge of python so please tailor answer to my proficiency.Also explain some code concepts if possible"
+    
+      // send image data for suitable conversion
+      const myImage = fileToGenerativePart("image.png", "image/png");
+      const result = await model.generateContent([prompt, myImage]);
+      const response = await result.response;
+      const responseText = response.text();
+      responseToSend = responseText;
+      console.log(responseText);
+
+  if (responseToSend  === '') {
+    res.json({ response: 'no data to send, sorry!' });
+    return;
   }
-  res.json({response: responseToSend});
-})
+
+  console.log('Console log response:', responseToSend);
+  res.json({ response: responseToSend });
+});
+
+
+app.post('/getUserResponse', async (req, res) => {
+  try {
+    if (!req.body) {
+      return res.status(400).json({ error: 'No request body provided' });
+    }
+
+    // Get gemini-pro-vision model
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const prompt = req.body.message ?? '';
+
+    // Send image data for suitable conversion
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const responseText = response.text();
+    console.log(responseText);
+
+    if (!responseText) {
+      res.json({ response: 'no data to send, sorry!' });
+      return;
+    }
+
+    console.log('Console log response:', responseText);
+    res.json({ response: responseText });
+  } catch (error) {
+    console.error('Error generating content:', error);
+    res.status(500).json({ error: 'Error generating content' });
+  }
+});
 
 //start listening on given port
 app.listen(port, () => {

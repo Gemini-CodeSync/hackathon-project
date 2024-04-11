@@ -53,9 +53,11 @@ button{
 .premium-feat{
     margin-top:0px;
     margin-left: 5px;
+    text-align: center;
+    font-size: 13px;
 }
 
-p{
+.home-p{
     font-size: 13px;
     text-align: center;
 }
@@ -64,7 +66,7 @@ a{
     text-decoration: none;
 }
 
-.Scan-a{
+.Scan-a, .new-scan{
     color: white;
 }
 
