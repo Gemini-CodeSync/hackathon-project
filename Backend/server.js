@@ -2,19 +2,26 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+var cors = require('cors');
+const fetch = (...args) => 
+  import('node-fetch').then(({default: fetch}) => fetch(...args));
 require('dotenv').config()
 
 //Import Generative AI library
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
+const CLIENT_ID = "b8a3e4fb31ad799aa9b7";
+const CLIENT_SECRET = "ee441a41e8a39d5a60a6413938e7b70cd94ac8af";
+
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 //create instance of google generative AI using API key authentication
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_URI);
 
 //Parse JSON data in request bodies 
 app.use(bodyParser.json());
+app.use(cors());
 
 var responseToSend = '';
 
@@ -100,6 +107,37 @@ app.post('/getUserResponse', async (req, res) => {
     console.error('Error generating content:', error);
     res.status(500).json({ error: 'Error generating content' });
   }
+});
+
+app.get('/getAccessToken', async function (req, res) {
+  console.log(req.query.code);
+  const params = "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&code=" + req.query.code;
+
+  await fetch("https://github.com/login/oauth/access_token" + params, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+    }})
+    .then(response => {return response.json()})
+    .then(data => {
+      console.log(data, "Access data");
+      res.json(data);
+    })
+
+});
+
+app.get('/getUserData', async function (req,res) {
+  req.get('Authorization'); //Bearer ACCESS_TOKEN
+  await fetch("https://api.github.com/user", {
+    method: 'GET',
+    headers: {
+      'Authorization': req.get('Authorization'),
+    }})
+    .then(response => {return response.json()})
+    .then(data => {
+      console.log(data);
+      res.json(data);
+    })
 });
 
 //start listening on given port

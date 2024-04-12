@@ -17,14 +17,21 @@
         "default_title": "CodeSync",
         "default_popup": "index.html"
     },
+    "background": {
+        "service_worker": "background.js"
+      },
     "permissions": [
         "scripting",
         "tabs",
         "storage",
-        "activeTab"
+        "activeTab",
+        "identity"
     ],
     "host_permissions": [
         "http://*/*",
-        "https://*/*"
+        "https://*/*",
+        "https://github.com/*",
+        "http://localhost:3000/*",
+        "http://localhost:5173/*"
     ]
 }
