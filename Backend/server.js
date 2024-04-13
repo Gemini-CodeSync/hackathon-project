@@ -140,6 +140,52 @@ app.get('/getUserData', async function (req,res) {
     })
 });
 
+app.get('/getRepoData/:owner/:repo', async function (req,res) {
+  const { owner, repo } = req.params;
+  const authHeader = req.get('Authorization'); //Bearer ACCESS_TOKEN
+  await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': authHeader,
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    res.json(data);
+  });
+});
+
+//Gets all public repos of a user
+app.get('/getUserRepos/:username', (req, res) => {
+  const username = req.params.username;
+  // Fetch the user's repos from GitHub API
+  fetch(`https://api.github.com/users/${username}/repos`)
+    .then(response => response.json())
+    .then(data => res.json(data))
+    .catch(error => {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'An error occurred' });
+    });
+});
+
+//Gets all repos
+app.get('/getAllRepos', (req, res) => {
+  const authHeader = req.headers.authorization;
+  // Fetch the user's repos from GitHub API
+  fetch(`https://api.github.com/user/repos`, {
+    headers: {
+      "Authorization": authHeader
+    }
+  })
+  .then(response => response.json())
+  .then(data => res.json(data))
+  .catch(error => {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  });
+});
+
 //start listening on given port
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

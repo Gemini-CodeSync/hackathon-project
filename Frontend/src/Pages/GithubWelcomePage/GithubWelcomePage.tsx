@@ -1,8 +1,54 @@
 import { useState, useEffect } from 'react';
+import ReactSelect from 'react-select';
+
+import AceEditor from "react-ace";
+import { Treebeard } from 'react-treebeard';
+
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/theme-github";
+
+// async function getRepositories() {
+//   const accessToken = localStorage.getItem('accessToken');
+//   const response = await fetch('https://api.github.com/user/repos', {
+//     headers: {
+//       'Authorization': `token ${accessToken}`
+//     }
+//   });
+//   const data = await response.json();
+//   return data;
+// }
 
 const GithubWelcomePage = () => {
 
   const [rerender, setRerender] = useState(false);
+  const [repositories, setRepositories] = useState([]);
+  const [selectedRepo, setSelectedRepo] = useState(null);
+
+  const options = repositories.map((repo: any) => ({ value: repo.name, label: repo.name }));
+
+  //Returns all personal repositories, public and private
+  async function getAllRepos() {
+    try {
+      return fetch(`http://localhost:3000/getAllRepos`, {
+        method: 'GET',
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem('accessToken')
+        }
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Data after fetch:', data);
+        //setRepositories(data);
+        setRepositories(data || []);
+        //return data;
+      })
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  
 
   useEffect(() => {
     const queryStr = window.location.search;
@@ -29,11 +75,64 @@ const GithubWelcomePage = () => {
       }
       getAccessToken();
     }
+    getAllRepos();
 
   },[]);
 
-  async function getUserData(){
-    await fetch("http://localhost:3000/getUserData", {
+  
+
+  //Returns user data
+  async function getUserData() {
+    try {
+      const response = await fetch('http://localhost:3000/getUserData', {
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem('accessToken')
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log('UserData:', data)
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  //Returns only public repositories
+  async function getUserRepos() {
+    try {
+      let data: any = await getUserData();
+      console.log('Data after getUserData:', data);
+      console.log('Data.login after getUserData:', data.login);
+      return fetch(`http://localhost:3000/getUserRepos/${data.login}`, {
+        method: 'GET',
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem('accessToken')
+        }
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Data after fetch:', data);
+        return data;
+      })
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  function viewRepo() {
+    if (selectedRepo) {
+      window.open(`https://github.com/${selectedRepo}`, '_blank');
+    }
+  }
+  
+
+  async function getRepoData(owner: any, repo: any) {
+    await fetch(`http://localhost:3000/getRepoData/${owner}/${repo}`, {
       method: 'GET',
       headers: {
         "Authorization": "Bearer " + localStorage.getItem('accessToken')
@@ -47,48 +146,7 @@ const GithubWelcomePage = () => {
     })
   }
 
-  // const [accessToken, setAccessToken] = useState<string | null>(null);
-
-  // useEffect(() => {
-  //   chrome.storage.local.get('accessToken', (result) => {
-  //     setAccessToken(result.accessToken);
-  //   });
-  // }, []);
-
-  // // const getRepoData = (owner: string, repo: string) => {
-  // //   if (!accessToken) {
-  // //     console.log('No access token found');
-  // //     return;
-  // //   }
-
-  // //   fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-  // //     headers: {
-  // //       'Authorization': `token ${accessToken}`
-  // //     }
-  // //   })
-  // //   .then((response: Response) => response.json())
-  // //   .then((data: any) => {
-  // //     console.log('Repository data:', data);
-  // //   });
-  // // }
-
-  // const getAccessibleRepos = () => {
-  //   if (!accessToken) {
-  //     console.log('No access token found');
-  //     return;
-  //   }
   
-  //   fetch(`https://api.github.com/user/repos`, {
-  //     headers: {
-  //       'Authorization': `token ${accessToken}`
-  //     }
-  //   })
-  //   .then((response: Response) => response.json())
-  //   .then((data: any) => {
-  //     console.log('Accessible repositories:', data);
-  //   });
-  // }
-
   return (
     <>
       <h1>Hello, A</h1>
@@ -97,14 +155,26 @@ const GithubWelcomePage = () => {
       <button>Scan Now</button><br/>
       
       <p>Please choose one of the premium features</p><br/>
-      <button>Import Public Github Repositories</button><br/>
+      <button onClick={getUserRepos}>Import Public Github Repositories</button><br/>
       <p>OR</p><br/>
       {/* <button onClick={getAccessibleRepos}>Import Private Github Repositories</button><br/> */}
-      <button onClick={getUserData}>Import Private Github Repositories</button><br/>
+      {repositories.length > 0 && (
+        <ReactSelect
+          options={options}
+          isSearchable
+          onChange={(selectedOption: any) => {
+            setSelectedRepo(selectedOption);
+          }}
+        />
+      )}
+      <br/>
+      <button onClick={viewRepo}>Import Private Github Repository</button><br/>
       
-      <p>OR</p><br/>
+      
+      
+      {/* <p>OR</p><br/>
 
-     <button onClick={() => {localStorage.removeItem("accessToken");}}><a href=''>Log Out</a></button><br/>
+     <button onClick={() => {localStorage.removeItem("accessToken");}}><a href=''>Log Out</a></button><br/> */}
       
       <p>New to this extension? Let's check out some FAQs</p>
     </>
