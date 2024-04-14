@@ -14,7 +14,10 @@ if (!context) {
   throw new Error('GlobalStateContext is null');
 }
 
-const { globalState, setGlobalState } = context;
+  const { globalState, setGlobalState } = context;
+
+  const [url, setUrl] = useState('');
+  const [data, setData] = useState(null);
 
   const options = globalState.repositories 
   ? globalState.repositories.map((repo: any, index: number) => ({ value: repo.name, label: repo.name, id: index }))
@@ -55,6 +58,17 @@ const { globalState, setGlobalState } = context;
 
   },[]);
 
+
+  // const handleSubmit = (event: any) => {
+  //   event.preventDefault();
+  //   chrome.tabs.create({ url });
+  // };
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    window.open(url, '_blank');
+  };
+
   
   return (
     <>
@@ -92,7 +106,17 @@ const { globalState, setGlobalState } = context;
       <br/>
       <button onClick={() => {fetchRepoContents(globalState.selectedRepo,globalState.repositories,setGlobalState, globalState)}}>Import Private Github Repository</button><br/>
       
-      
+      <br/>
+      <br/>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', width: '200px' }}>
+      <label style={{ marginBottom: '10px' }}>
+        GitHub URL: <br/>
+        <input type="url" value={url} onChange={e => setUrl(e.target.value)} required style={{ marginTop: '5px', width: "300px", padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }} />
+      </label>
+      <button type="submit" style={{ padding: '10px', borderRadius: '5px', border: 'none', backgroundColor: '#007BFF', color: 'white', cursor: 'pointer' }}>
+        Go to any Public Repository
+      </button>
+    </form>
       
       {/* <p>OR</p><br/>
 
