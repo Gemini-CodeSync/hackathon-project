@@ -1,56 +1,29 @@
 import { useState, useEffect } from 'react';
 import ReactSelect from 'react-select';
+import { getAllRepos, getUserRepos, fetchRepoContents,  } from "../../utils/fetchCode";
+import { useContext } from 'react';
+import { GlobalStateContext } from "../../contexts/GlobalStateContext"
 
-// import AceEditor from "react-ace";
-// import { Treebeard } from 'react-treebeard';
-
-// import "ace-builds/src-noconflict/mode-javascript";
-// import "ace-builds/src-noconflict/theme-github";
-
-// async function getRepositories() {
-//   const accessToken = localStorage.getItem('accessToken');
-//   const response = await fetch('https://api.github.com/user/repos', {
-//     headers: {
-//       'Authorization': `token ${accessToken}`
-//     }
-//   });
-//   const data = await response.json();
-//   return data;
-// }
 
 const GithubWelcomePage = () => {
 
-  const [rerender, setRerender] = useState(false);
-  const [repositories, setRepositories] = useState([]);
-  const [selectedRepo, setSelectedRepo] = useState(null);
-  const [selectedRepoContents, setSelectedRepoContents] = useState(null);
+  // const [rerender, setRerender] = useState(false);
+  // const [repositories, setRepositories] = useState([]);
+  // const [selectedRepo, setSelectedRepo] = useState(null);
+  // const [selectedRepoContents, setSelectedRepoContents] = useState(null);
+  const context = useContext(GlobalStateContext);
 
-  const options = repositories.map((repo: any, index: number) => ({ value: repo.name, label: repo.name, id: index }));
+if (!context) {
+  // context is null, handle the error
+  throw new Error('GlobalStateContext is null');
+}
 
+const { globalState, setGlobalState } = context;
+
+  const options = globalState.repositories 
+  ? globalState.repositories.map((repo: any, index: number) => ({ value: repo.name, label: repo.name, id: index }))
+  : [];
   //Returns all personal repositories, public and private
-  async function getAllRepos() {
-    try {
-      return fetch(`http://localhost:3000/getAllRepos`, {
-        method: 'GET',
-        headers: {
-          "Authorization": "Bearer " + localStorage.getItem('accessToken')
-        }
-      })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Data after fetch:', data);
-        //setRepositories(data);
-        setRepositories(data || []);
-        //return data;
-      })
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-  
-
   useEffect(() => {
     const queryStr = window.location.search;
     const urlParams = new URLSearchParams(queryStr);
@@ -70,124 +43,15 @@ const GithubWelcomePage = () => {
           console.log(data);
           if(data.access_token){
             localStorage.setItem('accessToken', data.access_token);
-            setRerender(!rerender);
+            setGlobalState({...globalState, rerender: !globalState.rerender});
           } 
         })
       }
       getAccessToken();
     }
-    getAllRepos();
+    getAllRepos(setGlobalState, globalState);
 
   },[]);
-
-  
-
-  //Returns user data
-  async function getUserData() {
-    try {
-      const response = await fetch('http://localhost:3000/getUserData', {
-        headers: {
-          "Authorization": "Bearer " + localStorage.getItem('accessToken')
-        }
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log('UserData:', data)
-      return data;
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
-  //Returns only public repositories
-  async function getUserRepos() {
-    try {
-      let data: any = await getUserData();
-      console.log('Data after getUserData:', data);
-      console.log('Data.login after getUserData:', data.login);
-      return fetch(`http://localhost:3000/getUserRepos/${data.login}`, {
-        method: 'GET',
-        headers: {
-          "Authorization": "Bearer " + localStorage.getItem('accessToken')
-        }
-      })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Data after fetch:', data);
-        return data;
-      })
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
-  function viewRepo() {
-    if (selectedRepo) {
-      window.open(`https://github.com/${selectedRepo}`, '_blank');
-    }
-  }
-  
-
-  async function getRepoData(owner: any, repo: any) {
-    await fetch(`http://localhost:3000/getRepoData/${owner}/${repo}`, {
-      method: 'GET',
-      headers: {
-        "Authorization": "Bearer " + localStorage.getItem('accessToken')
-      }
-    })
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-    })
-  }
-
-  async function fetchDirContents(url: string) {
-    const response = await fetch(url, {
-      headers: {
-        "Authorization": "Bearer " + localStorage.getItem('accessToken')
-      }
-    });
-    let data = await response.json();
-    console.log('Data after fetchDirContents:', data)
-    return data;
-  }
-
-  async function fetchAllPaths(contents: any[]): Promise<string[]> {
-    let paths: string[] = [];
-    for (const item of contents) {
-      paths.push(item.path);
-      if (item.type === 'dir') {
-        const dirContents = await fetchDirContents(item.url);
-        paths = paths.concat(await fetchAllPaths(dirContents));
-      }
-    }
-    console.log('Fetch all Paths:', paths)
-    return paths;
-  };
-
-  async function fetchRepoContents(repo: any) {
-    const repoObj: any = repositories[repo.id];
-    console.log('repoObj:', repoObj);
-
-  const contentsUrl = repoObj.contents_url.replace('{+path}', '');
-  const response = await fetch(contentsUrl, {
-    headers: {
-      "Authorization": "Bearer " + localStorage.getItem('accessToken')
-    }
-  });
-    const data = await response.json();
-    console.log('Data after fetch: Repo Contents', data);
-    const paths : any = await fetchAllPaths(data);
-    console.log('Paths:', paths);
-    setSelectedRepoContents(paths);
-
-  }
 
   
   return (
@@ -201,17 +65,17 @@ const GithubWelcomePage = () => {
       <button onClick={getUserRepos}>Import Public Github Repositories</button><br/>
       <p>OR</p><br/>
       {/* <button onClick={getAccessibleRepos}>Import Private Github Repositories</button><br/> */}
-      {repositories.length > 0 && (
+      {globalState.repositories && globalState.repositories.length > 0 && (
         <ReactSelect
           options={options}
           isSearchable
           onChange={(selectedOption: any) => {
-            setSelectedRepo(selectedOption);
+            setGlobalState({...globalState, selectedRepo: selectedOption});
           }}
         />
       )}
       <br/>
-      <button onClick={() => {fetchRepoContents(selectedRepo)}}>Import Private Github Repository</button><br/>
+      <button onClick={() => {fetchRepoContents(globalState.selectedRepo,globalState.repositories,setGlobalState, globalState)}}>Import Private Github Repository</button><br/>
       
       
       
