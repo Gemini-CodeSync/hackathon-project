@@ -7,6 +7,9 @@ type GlobalStateType = {
   selectedRepo: any;
   selectedRepoContents: any;
   publicRepos: any[];
+  filePaths: any[];
+  repoName: string;
+  repoOwner: string;
 };
 
 type Props = {
@@ -21,7 +24,10 @@ export function GlobalStateProvider({ children }: Props) {
     repositories: [],
     selectedRepo: null,
     selectedRepoContents: null,
-    publicRepos: []
+    publicRepos: [],
+    filePaths: [],
+    repoName: "",
+    repoOwner: ""
   };
 
   const [globalState, setGlobalState] = useState({});

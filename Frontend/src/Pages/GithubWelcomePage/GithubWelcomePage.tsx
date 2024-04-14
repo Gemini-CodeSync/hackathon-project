@@ -17,8 +17,7 @@ if (!context) {
   const { globalState, setGlobalState } = context;
 
   const [url, setUrl] = useState('');
-  const [data, setData] = useState(null);
-
+ 
   const options = globalState.repositories 
   ? globalState.repositories.map((repo: any, index: number) => ({ value: repo.name, label: repo.name, id: index }))
   : [];

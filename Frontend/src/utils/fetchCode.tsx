@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer';
 
 export async function getAllRepos(setGlobalState: Function, globalState: any) {
     try {
@@ -130,5 +131,7 @@ export async function getAllRepos(setGlobalState: Function, globalState: any) {
     const paths : any = await fetchAllPaths(data);
     console.log('Paths:', paths);
     setGlobalState({...globalState, selectedRepoContents: paths});
+    setGlobalState({...globalState, repoOwner: repoObj.owner.login});
+    setGlobalState({...globalState, repoName: repoObj.name});
 
   }
