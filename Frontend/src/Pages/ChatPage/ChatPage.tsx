@@ -1,17 +1,20 @@
+import { useLocation } from "react-router";
 
 const ChatPage = () => {
+  const location = useLocation();
+  const extractedUsername = location.state?.username || '';
   return (
     <>
-      <h1>Hello, A</h1>
-      <h1> Let's take advantage of premium features</h1>
+      <h1 className="first-h1">Hello, {extractedUsername}</h1>
+      <h1 className="second-h1"> Let's take advantage of premium features</h1>
 
-      <p>Ask me any explanation for your repository code!</p><br/>
+      <p className="home-p">Ask me any explanation for your repository code!</p><br/>
       {/* Insert an input box for question -- most likely textarea */}
 
-      <button>Send Question</button>
-      <button>Return Home</button><br/>
+      <button style={{marginLeft:'5%', marginRight: '10%'}}><a style={{color:'white'}}>Send Question</a></button>
+      <button style={{width:'40%'}}><a href="" style={{color:'white'}}>Return Home</a></button><br/>
 
-      <p>New to this question? Let's check out some FAQs</p>
+      <p className="home-p">New to this question? Let's check out some FAQs</p>
     </>
   )
 }

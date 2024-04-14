@@ -21,10 +21,15 @@
         "scripting",
         "tabs",
         "storage",
-        "activeTab"
+        "activeTab",
+        "identity",
+        "webNavigation"
     ],
     "host_permissions": [
         "http://*/*",
-        "https://*/*"
+        "https://*/*",
+        "https://github.com/*",
+        "http://localhost:4000/*"
     ]
+    
 }

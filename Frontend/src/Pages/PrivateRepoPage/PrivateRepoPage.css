@@ -1,0 +1,27 @@
+select {
+    padding: 8px 12px; 
+    font-size: 12px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    background-color: #fff; 
+    color: #333; 
+    outline: none; 
+    width: 80%;
+    margin-left: 10%; 
+    margin-bottom: 5%;
+  }
+  
+  select:hover,
+  select:focus {
+    border-color: #66afe9;
+  }
+  
+  select option {
+    padding: 8px 12px; 
+  }
+
+  .private-repo-gif{
+      margin-left: 20%;
+      height: 23vh;
+      margin-bottom: 2%;
+  }
