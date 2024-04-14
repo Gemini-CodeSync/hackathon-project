@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import ReactSelect from 'react-select';
 
-import AceEditor from "react-ace";
-import { Treebeard } from 'react-treebeard';
+// import AceEditor from "react-ace";
+// import { Treebeard } from 'react-treebeard';
 
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/theme-github";
+// import "ace-builds/src-noconflict/mode-javascript";
+// import "ace-builds/src-noconflict/theme-github";
 
 // async function getRepositories() {
 //   const accessToken = localStorage.getItem('accessToken');
@@ -23,8 +23,9 @@ const GithubWelcomePage = () => {
   const [rerender, setRerender] = useState(false);
   const [repositories, setRepositories] = useState([]);
   const [selectedRepo, setSelectedRepo] = useState(null);
+  const [selectedRepoContents, setSelectedRepoContents] = useState(null);
 
-  const options = repositories.map((repo: any) => ({ value: repo.name, label: repo.name }));
+  const options = repositories.map((repo: any, index: number) => ({ value: repo.name, label: repo.name, id: index }));
 
   //Returns all personal repositories, public and private
   async function getAllRepos() {
@@ -146,6 +147,48 @@ const GithubWelcomePage = () => {
     })
   }
 
+  async function fetchDirContents(url: string) {
+    const response = await fetch(url, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem('accessToken')
+      }
+    });
+    let data = await response.json();
+    console.log('Data after fetchDirContents:', data)
+    return data;
+  }
+
+  async function fetchAllPaths(contents: any[]): Promise<string[]> {
+    let paths: string[] = [];
+    for (const item of contents) {
+      paths.push(item.path);
+      if (item.type === 'dir') {
+        const dirContents = await fetchDirContents(item.url);
+        paths = paths.concat(await fetchAllPaths(dirContents));
+      }
+    }
+    console.log('Fetch all Paths:', paths)
+    return paths;
+  };
+
+  async function fetchRepoContents(repo: any) {
+    const repoObj: any = repositories[repo.id];
+    console.log('repoObj:', repoObj);
+
+  const contentsUrl = repoObj.contents_url.replace('{+path}', '');
+  const response = await fetch(contentsUrl, {
+    headers: {
+      "Authorization": "Bearer " + localStorage.getItem('accessToken')
+    }
+  });
+    const data = await response.json();
+    console.log('Data after fetch: Repo Contents', data);
+    const paths : any = await fetchAllPaths(data);
+    console.log('Paths:', paths);
+    setSelectedRepoContents(paths);
+
+  }
+
   
   return (
     <>
@@ -168,7 +211,7 @@ const GithubWelcomePage = () => {
         />
       )}
       <br/>
-      <button onClick={viewRepo}>Import Private Github Repository</button><br/>
+      <button onClick={() => {fetchRepoContents(selectedRepo)}}>Import Private Github Repository</button><br/>
       
       
       
