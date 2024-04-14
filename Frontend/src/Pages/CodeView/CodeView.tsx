@@ -5,7 +5,7 @@ import { GlobalStateContext } from "../../contexts/GlobalStateContext"
 
 
 
-function MyComponent() {
+export default function CodeView() {
     const context = useContext(GlobalStateContext);
 
     if (!context) {
@@ -17,7 +17,7 @@ function MyComponent() {
     const [fileContents, setFileContents] = useState<string[]>([]);
 
     globalState.selectedRepoContents.forEach((filePath: any) => {
-    fetch(`https://api.github.com/repos/${globalState.repoOwner}/${globalState.repoName}/contents/${filePath}`, {
+    fetch(`http://localhost:3000/getRepoData/${globalState.repoOwner}/${globalState.repoName}/${filePath}`, {
       headers: {
         "Authorization": "Bearer " + localStorage.getItem('accessToken')
       }
@@ -41,6 +41,4 @@ function MyComponent() {
       ))}
     </div>
   );
-}
-
-export default MyComponent;
+};

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import ReactSelect from 'react-select';
-import { getAllRepos, getUserRepos, fetchRepoContents,  } from "../../utils/fetchCode";
+import { getAllRepos, getUserRepos, fetchRepoContents, generateOutput } from "../../utils/fetchCode";
 import { useContext } from 'react';
 import { GlobalStateContext } from "../../contexts/GlobalStateContext"
 
@@ -104,7 +104,7 @@ if (!context) {
       )}
       <br/>
       <button onClick={() => {fetchRepoContents(globalState.selectedRepo,globalState.repositories,setGlobalState, globalState)}}>Import Private Github Repository</button><br/>
-      
+      {/* //await generateOutput(setGlobalState, globalState); */}
       <br/>
       <br/>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', width: '200px' }}>

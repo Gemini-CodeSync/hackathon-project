@@ -1,4 +1,39 @@
-import { Buffer } from 'buffer';
+
+export async function generateOutput(setGlobalState: Function, globalState: any){
+
+  if (!Array.isArray(globalState.selectedRepoContents)) {
+    console.error('selectedRepoContents is not defined or not an array');
+    return;
+  }
+  
+  globalState.selectedRepoContents.forEach((filePath: any) => {
+    fetch(`http://localhost:3000/getRepoData/${globalState.repoOwner}/${globalState.repoName}/${filePath}`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem('accessToken')
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const fileContentBase64 = data.content;
+        const fileContent = Buffer.from(fileContentBase64, 'base64').toString('utf8');
+  
+        setGlobalState((prevState : any) => ({
+          ...prevState,
+          fileContents: [...prevState.fileContents, `File: ${filePath}\n${fileContent}\n\n`]
+        }));
+  
+        // Open a new tab and display the file content
+        const newWindow = window.open('', '_blank');
+        if (newWindow) {
+          newWindow.document.write(`<pre>${globalState.fileContents}</pre>`);
+          newWindow.document.close();
+        }
+      })
+      .catch((error) => {
+        console.error(`Failed to get file content for ${filePath}: ${error}`);
+      });
+  });
+}
 
 export async function getAllRepos(setGlobalState: Function, globalState: any) {
     try {
@@ -128,10 +163,17 @@ export async function getAllRepos(setGlobalState: Function, globalState: any) {
   });
     const data = await response.json();
     console.log('Data after fetch: Repo Contents', data);
-    const paths : any = await fetchAllPaths(data);
+    const paths : any[] = await fetchAllPaths(data);
     console.log('Paths:', paths);
     setGlobalState({...globalState, selectedRepoContents: paths});
     setGlobalState({...globalState, repoOwner: repoObj.owner.login});
     setGlobalState({...globalState, repoName: repoObj.name});
+    // setGlobalState((prevState : any) => ({
+    //   ...prevState,
+    //   selectedRepoContents: paths,
+    //   repoOwner: repoObj.owner.login,
+    //   repoName: repoObj.name
+    // }));
+    
 
   }

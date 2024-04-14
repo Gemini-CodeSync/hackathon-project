@@ -140,10 +140,11 @@ app.get('/getUserData', async function (req,res) {
     })
 });
 
-app.get('/getRepoData/:owner/:repo', async function (req,res) {
-  const { owner, repo } = req.params;
+app.get('/getRepoData/:owner/:repo/:path*', async function (req,res) {
+  const { owner, repo, path} = req.params;
+  const filePath = Array.isArray(path) ? path.join('/') : path || '';
   const authHeader = req.get('Authorization'); //Bearer ACCESS_TOKEN
-  await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+  await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
     method: 'GET',
     headers: {
       'Authorization': authHeader,

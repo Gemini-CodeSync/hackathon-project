@@ -5,11 +5,12 @@ type GlobalStateType = {
   rerender: boolean;
   repositories: any[];
   selectedRepo: any;
-  selectedRepoContents: any;
+  selectedRepoContents: any[];
   publicRepos: any[];
   filePaths: any[];
   repoName: string;
   repoOwner: string;
+  fileContents: any[];
 };
 
 type Props = {
@@ -23,11 +24,12 @@ export function GlobalStateProvider({ children }: Props) {
     rerender: false,
     repositories: [],
     selectedRepo: null,
-    selectedRepoContents: null,
+    selectedRepoContents: [],
     publicRepos: [],
     filePaths: [],
     repoName: "",
-    repoOwner: ""
+    repoOwner: "",
+    fileContents: [],
   };
 
   const [globalState, setGlobalState] = useState({});
