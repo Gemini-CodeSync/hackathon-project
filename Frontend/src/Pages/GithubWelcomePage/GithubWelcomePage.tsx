@@ -7,10 +7,6 @@ import { GlobalStateContext } from "../../contexts/GlobalStateContext"
 
 const GithubWelcomePage = () => {
 
-  // const [rerender, setRerender] = useState(false);
-  // const [repositories, setRepositories] = useState([]);
-  // const [selectedRepo, setSelectedRepo] = useState(null);
-  // const [selectedRepoContents, setSelectedRepoContents] = useState(null);
   const context = useContext(GlobalStateContext);
 
 if (!context) {
@@ -80,7 +76,7 @@ const { globalState, setGlobalState } = context;
         />
       )}
       <br/>
-      <button onClick={() => {fetchRepoContents(globalState.selectedRepo,globalState.repositories,setGlobalState, globalState)}}>Import Public Github Repositories</button><br/>
+      <button onClick={() => {fetchRepoContents(globalState.selectedRepo,globalState.repositories,setGlobalState, globalState)}}>Import Owned Public Github Repositories</button><br/>
       
       <p>OR</p><br/>
       {/* <button onClick={getAccessibleRepos}>Import Private Github Repositories</button><br/> */}
