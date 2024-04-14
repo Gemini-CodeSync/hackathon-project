@@ -23,6 +23,11 @@ const { globalState, setGlobalState } = context;
   const options = globalState.repositories 
   ? globalState.repositories.map((repo: any, index: number) => ({ value: repo.name, label: repo.name, id: index }))
   : [];
+
+  const publicOptions = globalState.publicRepos 
+  ? globalState.publicRepos.map((repo: any, index: number) => ({ value: repo.name, label: repo.name, id: index }))
+  : [];
+
   //Returns all personal repositories, public and private
   useEffect(() => {
     const queryStr = window.location.search;
@@ -50,6 +55,7 @@ const { globalState, setGlobalState } = context;
       getAccessToken();
     }
     getAllRepos(setGlobalState, globalState);
+    getUserRepos(setGlobalState, globalState);
 
   },[]);
 
@@ -62,7 +68,20 @@ const { globalState, setGlobalState } = context;
       <button>Scan Now</button><br/>
       
       <p>Please choose one of the premium features</p><br/>
-      <button onClick={getUserRepos}>Import Public Github Repositories</button><br/>
+      
+     
+      {globalState.publicRepos && globalState.publicRepos.length > 0 && (
+        <ReactSelect
+          options={publicOptions}
+          isSearchable
+          onChange={(selectedOption: any) => {
+            setGlobalState({...globalState, selectedRepo: selectedOption});
+          }}
+        />
+      )}
+      <br/>
+      <button onClick={() => {fetchRepoContents(globalState.selectedRepo,globalState.repositories,setGlobalState, globalState)}}>Import Public Github Repositories</button><br/>
+      
       <p>OR</p><br/>
       {/* <button onClick={getAccessibleRepos}>Import Private Github Repositories</button><br/> */}
       {globalState.repositories && globalState.repositories.length > 0 && (

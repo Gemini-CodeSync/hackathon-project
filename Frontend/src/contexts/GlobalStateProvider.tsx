@@ -6,6 +6,7 @@ type GlobalStateType = {
   repositories: any[];
   selectedRepo: any;
   selectedRepoContents: any;
+  publicRepos: any[];
 };
 
 type Props = {
@@ -20,6 +21,7 @@ export function GlobalStateProvider({ children }: Props) {
     repositories: [],
     selectedRepo: null,
     selectedRepoContents: null,
+    publicRepos: []
   };
 
   const [globalState, setGlobalState] = useState({});

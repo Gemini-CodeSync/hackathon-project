@@ -13,7 +13,8 @@ export async function getAllRepos(setGlobalState: Function, globalState: any) {
       .then((data) => {
         console.log('Data after fetch:', data);
         //setRepositories(data);
-        setGlobalState({ ...globalState, repositories: data || [] });
+        // setGlobalState({ ...globalState, repositories: data || [] });
+        setGlobalState((prevState : any) => ({ ...prevState, repositories: data || [] }));
         //return data;
       })
     } catch (error) {
@@ -35,6 +36,7 @@ export async function getAllRepos(setGlobalState: Function, globalState: any) {
       }
       const data = await response.json();
       console.log('UserData:', data)
+      
       return data;
     } catch (error) {
       console.error('Error:', error);
@@ -42,7 +44,7 @@ export async function getAllRepos(setGlobalState: Function, globalState: any) {
   }
 
   //Returns only public repositories
-  export async function getUserRepos() {
+  export async function getUserRepos(setGlobalState: Function, globalState: any) {
     try {
       let data: any = await getUserData();
       console.log('Data after getUserData:', data);
@@ -58,7 +60,9 @@ export async function getAllRepos(setGlobalState: Function, globalState: any) {
       })
       .then((data) => {
         console.log('Data after fetch:', data);
-        return data;
+        //return data;
+        //setGlobalState({ ...globalState, publicRepos: data || [] });
+        setGlobalState((prevState : any) => ({ ...prevState, publicRepos: data || [] }));
       })
     } catch (error) {
       console.error('Error:', error);
