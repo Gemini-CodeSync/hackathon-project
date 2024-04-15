@@ -82,7 +82,7 @@ const ExplanationPage = () => {
       </div>
 
       <button className='send-q-btn' onClick={getUserDataResponse}>Send Question</button>
-      <button className='return-home'>Return Home</button>
+      <button className='return-home'><a href=''>Return Home</a></button>
 
       <p>New to this extension? Let's check out some <a href=''>FAQs</a></p>
     </>

@@ -11,6 +11,7 @@ const GithubWelcomePage = () => {
     console.log("Extracted Username:", extractedUsername);
   }, [extractedUsername])
 
+
   async function getUserRepo(){
     chrome.storage.local.get('accessToken', async function(result){
       if(result.accessToken){

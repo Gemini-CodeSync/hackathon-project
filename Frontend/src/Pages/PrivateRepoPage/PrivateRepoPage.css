@@ -21,7 +21,8 @@ select {
   }
 
   .private-repo-gif{
-      margin-left: 20%;
-      height: 23vh;
+      margin-left: 10%;
+      width: 85%;
+      height: 45vh;
       margin-bottom: 2%;
   }
