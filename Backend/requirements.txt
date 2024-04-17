@@ -2,8 +2,8 @@ langchain_community
 unstructured # Document loading
 chromadb # Vector storage
 langchain-google-genai # For embeddings
-python-dotenv~=1.0.1
 langchain_core
 google-generativeai
-dotenv
+python-dotenv
 langchain-text-splitters
+chromadb

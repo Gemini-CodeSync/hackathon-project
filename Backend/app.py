@@ -3,6 +3,8 @@ import base64
 import os
 import requests
 from dotenv import load_dotenv
+from RAG.store_file import load_files
+from RAG.document_chat import start_chat, process_query
 
 load_dotenv()
 CLIENT_ID = os.environ.get('CLIENT_ID')
@@ -10,6 +12,7 @@ CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
 
 app = Flask(__name__)
 port = 3000
+
 
 #get user access token from code
 @app.route("/getAccessToken", methods=["GET"])
@@ -52,6 +55,41 @@ def getUserRepos():
     print(data)
     return jsonify(data)
 
+
+# Endpoint to invoke the process of storing file in vector DB
+@app.route("/storeFiles", methods=["POST"])
+def store_files():
+    # Getting JSON data from request
+    request_data = request.get_json()
+
+    # Exacting all the date required as parameters to call the function
+    repo_path = request_data["repoPath"]
+    file_name = request_data["filenamesToInclude"]
+    username = request_data["username"]
+
+    # Optional GitHub token, only required for private repos
+    github_token = None
+    if "githubToken" in request_data:
+        github_token = request_data["githubToken"]
+
+    # Calling the load_file Function with all the parameters
+    try:
+        load_files(repo_path, file_name, username, github_token)
+        return "Database created successfully", 201
+    except Exception as e:
+        return "Database couldn't be created", 500
+
+
+# @app.route("/startChat")
+# def start_chat_endpoint():
+#     username = request.args.get("username")
+#     try:
+#         response = start_chat(username)
+#         print(response)
+#         return jsonify(response), 200
+#     except Exception as e:
+#         print(e)
+#         return "Chat couldn't be started", 500
 
 # Start listening on given port
 if __name__ == '__main__':
