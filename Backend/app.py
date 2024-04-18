@@ -80,16 +80,37 @@ def store_files():
         return "Database couldn't be created", 500
 
 
-# @app.route("/startChat")
-# def start_chat_endpoint():
-#     username = request.args.get("username")
-#     try:
-#         response = start_chat(username)
-#         print(response)
-#         return jsonify(response), 200
-#     except Exception as e:
-#         print(e)
-#         return "Chat couldn't be started", 500
+# Endpoint to invoke the process of initializing new chat for an user
+@app.route("/startChat", methods=["GET"])
+def start_chat_endpoint():
+    username = request.args.get("username")
+    try:
+        response = start_chat(username)
+        return jsonify(response), 200
+    except Exception as e:
+        print(e)
+        return "Chat couldn't be started", 500
+
+
+# Endpoint to process user's query with relevant file in context
+@app.route("/sendMessage", methods=["POST"])
+def send_message():
+    request_data = request.get_json()
+
+    # Exacting all the date required as parameters to call the function
+    user_text_query = request_data["user_text_query"]
+    username = request_data["username"]
+    chat_history = request_data["chat_history"]
+
+    # Calling the process_query function to process the request and return a response
+    try:
+        response = process_query(user_text_query, chat_history, username)
+        print(response)
+        return jsonify(response), 200
+    except Exception as e:
+        print(e)
+        return "Message couldn't be processed", 500
+
 
 # Start listening on given port
 if __name__ == '__main__':
