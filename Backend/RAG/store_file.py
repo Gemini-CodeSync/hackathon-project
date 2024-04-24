@@ -17,6 +17,7 @@ def github_file_loader(repo_path, filenames_to_include, github_token):
     loader = GithubFileLoader(
         access_token=github_token,
         repo=repo_path,
+        github_api_url="https://api.github.com",
         file_filter=lambda filename: filename in filenames_to_include
     )
     try:
