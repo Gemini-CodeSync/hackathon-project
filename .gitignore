@@ -8,12 +8,17 @@ pnpm-debug.log*
 lerna-debug.log*
 
 Backend/.venv
+Backend/myvenv
+Backend/requirements.txt
+Backend/package-lock.json
 Frontend/dist
 Backend/node_modules
 node_modules
 dist
 dist-ssr
 *.local
+
+.env
 
 Backend/.env
 Backend/node_modules

@@ -5,5 +5,4 @@ langchain-google-genai # For embeddings
 python-dotenv~=1.0.1
 langchain_core
 google-generativeai
-dotenv
 langchain-text-splitters
