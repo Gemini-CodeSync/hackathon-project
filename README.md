@@ -5,23 +5,26 @@ It utilizes a variety of API's, Google Gemini and JS Frameworks along with integ
 
 
 API's Utilized:
- Langchain
- GitHub Authentication API
- langchain_community
-unstructured # Document loading
-chromadb # Vector storage
-langchain-google-genai # For embeddings
-langchain_core
-google-generativeai
-python-dotenv
-langchain-text-splitters
+ Langchain,
+ GitHub Authentication API,
+ langchain_community,
+unstructured # Document loading,
+chromadb # Vector storage,
+langchain-google-genai # For embeddings,
+langchain_core,
+google-generativeai,
+python-dotenv,
+langchain-text-splitters,
 chromadb
 
  
 Requirements:
  A Github Account with API Access
+ 
  Google Chrome or Chromium-based Web Browser
+ 
  Internet Connection
+ 
  Available Repository 
 
  Video Demo: --- Insert Link to Video (YouTube Link)
