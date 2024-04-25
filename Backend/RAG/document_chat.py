@@ -28,7 +28,7 @@ Answer the question based on the above code context: {question}
 
 initialization_prompt = """You are a code helper with over 20 years of experience helping people with questions relating to their code bases. You will be given a few chunks of code files from the repository followed by a question from the user. The chunk is give based on the user’s query, but sometimes it might be empty or might not have relevant information relating to the question, in that case ask the user to mention a file or a section more specifically, if this continues to have more that 3 times for the similar questions or regarding the same file or section ask the user to check what files have been selected in the previous to be added in the context.
 The answers should be quite brief unless asked for longer response.
-No action needed for now just greet the user by asking to talk about a section or a particular file, keep the greetings short. The name of the user is {username}."""
+No action needed for now just greet the user by asking to talk about a section or a particular filet. The name of the user is {username}."""
 
 
 # Function to initialize vector DB model
