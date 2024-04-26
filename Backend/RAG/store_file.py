@@ -11,14 +11,19 @@ load_dotenv()
 
 base_db_url = "data"
 
+FILE_EXTENSIONS = (".py", ".java", ".cpp", ".cs", ".js", "jsx", ".html", ".css", ".sh", ".md", ".ts", ".tsx", ".php",
+                   ".rb", ".swift", ".go", ".kt", ".lua", ".c", ".h", ".xml", ".json", ".yml", ".bat", ".dart",
+                   ".scala", ".sql", ".rust", ".txt"
+                   )
+
 
 # loads requested files from gitHub, returns them in document format with some metadata
-def github_file_loader(repo_path, filenames_to_include, github_token):
+def github_file_loader(repo_path, github_token):
     loader = GithubFileLoader(
         access_token=github_token,
         repo=repo_path,
         github_api_url="https://api.github.com",
-        file_filter=lambda filename: filename in filenames_to_include
+        file_filter=lambda file_path: file_path.endswith(FILE_EXTENSIONS)
     )
     try:
         return loader.load()
@@ -63,7 +68,8 @@ def save_to_chroma(chunks: list[Document], user_name):
         raise Exception("There was an error saving the chunks to DB")
 
 
-def load_files(repo_path, filenames_to_include: list[str], user_name, github_token=None):
-    documents = github_file_loader(repo_path, filenames_to_include, github_token)
+def load_files(repo_path, user_name, github_token=None):
+    documents = github_file_loader(repo_path, github_token)
+    print(documents)
     chunks = split_text(documents)
     save_to_chroma(chunks, user_name)

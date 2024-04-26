@@ -64,7 +64,6 @@ def store_files():
 
     # Exacting all the date required as parameters to call the function
     repo_path = request_data["repoPath"]
-    file_name = request_data["filenamesToInclude"]
     username = request_data["username"]
 
     # Optional GitHub token, only required for private repos
@@ -74,7 +73,7 @@ def store_files():
 
     # Calling the load_file Function with all the parameters
     try:
-        load_files(repo_path, file_name, username, github_token)
+        load_files(repo_path, username, github_token)
         return "Database created successfully", 201
     except Exception as e:
         return "Database couldn't be created", 500
