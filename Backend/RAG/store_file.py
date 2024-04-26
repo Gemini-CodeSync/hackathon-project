@@ -18,10 +18,11 @@ FILE_EXTENSIONS = (".py", ".java", ".cpp", ".cs", ".js", "jsx", ".html", ".css",
 
 
 # loads requested files from gitHub, returns them in document format with some metadata
-def github_file_loader(repo_path, github_token):
+def github_file_loader(repo_path, github_token, branch="main"):
     loader = GithubFileLoader(
         access_token=github_token,
         repo=repo_path,
+        branch=branch,
         github_api_url="https://api.github.com",
         file_filter=lambda file_path: file_path.endswith(FILE_EXTENSIONS)
     )
@@ -29,7 +30,10 @@ def github_file_loader(repo_path, github_token):
         return loader.load()
     except Exception as e:
         print(e)
-        raise Exception("There was an error loading the files from github")
+        if branch != "main":
+            raise Exception("There was an error loading the files from github")
+        else:
+            return github_file_loader(repo_path, github_token, "master")
 
 
 # This function will split the characters in chunks, chunk size is set 1000
@@ -70,6 +74,5 @@ def save_to_chroma(chunks: list[Document], user_name):
 
 def load_files(repo_path, user_name, github_token=None):
     documents = github_file_loader(repo_path, github_token)
-    print(documents)
     chunks = split_text(documents)
     save_to_chroma(chunks, user_name)
