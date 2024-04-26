@@ -1,10 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './ChatPage.css'
 
 const ChatPage = () => {
   const [userInput, setUserInput] = useState('');
   const [messages, setMessages] = useState([{type: 'bot', text: 'Hi! Welcome to our extension. Feel free to ask questions.'}]);
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState('');
+
+  useEffect(()=>{
+    chrome.storage.local.get('username', async function(result){
+      if(result.username){
+        setUsername(result.username);
+        fetch('http://localhost:3000/startChat', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'username': result.username
+        }});
+      }
+    })
+  }, []);
 
   const getUserDataResponse = async () => {
     if (userInput.trim() !== '') {
@@ -13,12 +28,12 @@ const ChatPage = () => {
       try {
         setLoading(true);
         //change this response api with sending github access token, link 
-        const response = await fetch('http://localhost:3000/getResponse', {
+        const response = await fetch('http://localhost:3000/sendMessage', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ message: userInput }),
+          body: JSON.stringify({ userTextQuery: userInput, username: username, chatHistory:  messages}),
         });
         const data = await response.json();
         setMessages(prevMessages => [...prevMessages, { type: 'bot', text: data.response }]);

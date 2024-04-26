@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './HomePage.css'
 import { useNavigate } from 'react-router';
 
-const CLIENT_ID = import.meta.env.VITE_APP_CLIENT_ID;
+const CLIENT_ID = import.meta.env.CLIENT_ID;
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -68,6 +68,15 @@ const HomePage = () => {
         console.log("THIS DATA:", data);
         const username = data.name;
         console.log("Username:", username);
+
+        chrome.storage.local.set({ 'username': username }, function(){
+          if(chrome.runtime.lastError){
+            console.error("Error setting data: " + chrome.runtime.lastError.message);
+          }else{
+            console.log("Data stored successfully");
+          }
+        })
+
 
         navigate('#/github', {state: {username}});
         navigate('#/privateRepo', {state: {username}});

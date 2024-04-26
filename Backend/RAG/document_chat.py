@@ -44,7 +44,7 @@ def initialize_db(user_name: str):
 # Retrival of 4 relevant chunks from the DB using a query
 def query_database(query: str, database: Chroma):
     results = database.similarity_search_with_relevance_scores(query)
-    print(results)
+    # print(results)
     return results
 
 

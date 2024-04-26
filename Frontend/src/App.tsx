@@ -7,9 +7,7 @@ import PublicRepoPage from './Pages/PublicRepoPage/PublicRepoPage';
 import PrivateRepoPage from './Pages/PrivateRepoPage/PrivateRepoPage';
 import ChatPage from './Pages/ChatPage/ChatPage';
 
-
 const App = () => {
-
   const [route, setRoute] = useState(window.location.hash);
 
   useEffect(() => {
