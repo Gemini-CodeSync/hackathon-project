@@ -28,7 +28,6 @@ def github_file_loader(repo_path, github_token):
     try:
         return loader.load()
     except Exception as e:
-        print(e)
         raise Exception("There was an error loading the files from github")
 
 
@@ -54,7 +53,6 @@ def save_to_chroma(chunks: list[Document], user_name):
     try:
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     except Exception as e:
-        print(e)
         raise Exception("There was an error loading the embeddings from Google")
 
     # Save the chunks to DB
@@ -64,12 +62,10 @@ def save_to_chroma(chunks: list[Document], user_name):
         )
         db.persist()
     except Exception as e:
-        print(e)
         raise Exception("There was an error saving the chunks to DB")
 
 
-def load_files(repo_path, user_name, github_token=None):
+def load_files(repo_path, user_name, github_token):
     documents = github_file_loader(repo_path, github_token)
-    print(documents)
     chunks = split_text(documents)
     save_to_chroma(chunks, user_name)

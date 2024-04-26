@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import base64
+from urllib.parse import urlparse
 import os
 import requests
 from dotenv import load_dotenv
@@ -35,7 +35,6 @@ def getAccessToken():
 @app.route("/getUserData", methods=["GET"])
 def getUserData():
     authorization_token = request.headers.get("authorization")
-    print(authorization_token)
     response = requests.get("https://api.github.com/user", headers={
         "Authorization": authorization_token
     })
@@ -52,7 +51,6 @@ def getUserRepos():
     })
 
     data = response.json()
-    print(data)
     return jsonify(data)
 
 
@@ -63,19 +61,23 @@ def store_files():
     request_data = request.get_json()
 
     # Exacting all the date required as parameters to call the function
-    repo_path = request_data["repoPath"]
+    repo_link = request_data["repoPath"]
     username = request_data["username"]
+    github_token = request_data["githubToken"]
 
-    # Optional GitHub token, only required for private repos
-    github_token = None
-    if "githubToken" in request_data:
-        github_token = request_data["githubToken"]
+    #parsing github link to create path format in username/repoName
+    parsed_url = urlparse(repo_link)
+    path = parsed_url.path
+    cleaned_path = path.strip("/")
+    path_parts = cleaned_path.split("/")
+    repo_path = "/".join(path_parts[:2])
 
     # Calling the load_file Function with all the parameters
     try:
         load_files(repo_path, username, github_token)
         return "Database created successfully", 201
     except Exception as e:
+        print(e)
         return "Database couldn't be created", 500
 
 
@@ -95,11 +97,12 @@ def start_chat_endpoint():
 @app.route("/sendMessage", methods=["POST"])
 def send_message():
     request_data = request.get_json()
+    print(request_data)
 
     # Exacting all the date required as parameters to call the function
-    user_text_query = request_data["user_text_query"]
+    user_text_query = request_data["userTextQuery"]
     username = request_data["username"]
-    chat_history = request_data["chat_history"]
+    chat_history = request_data["chatHistory"]
 
     # Calling the process_query function to process the request and return a response
     try:
