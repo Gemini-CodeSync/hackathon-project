@@ -5,10 +5,16 @@ import requests
 from dotenv import load_dotenv
 from RAG.store_file import load_files
 from RAG.document_chat import start_chat, process_query
+import base64
+import google.generativeai as genai
+from PIL import Image
 
 load_dotenv()
 CLIENT_ID = os.environ.get('CLIENT_ID')
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
+
+api_key = os.getenv("GOOGLE_API_KEY")
+genai.configure(api_key=api_key)
 
 app = Flask(__name__)
 port = 3000
@@ -113,6 +119,71 @@ def send_message():
         print(e)
         return "Message couldn't be processed", 500
 
+
+@app.route("/performOCR", methods=["POST"])
+def perform_ocr():
+    image_data = request.json.get("image")
+
+    base64_data = image_data.replace("data:image/png;base64,", "")
+    # Decode base64 data
+    try:
+        binary_data = base64.b64decode(base64_data)
+    except Exception as e:
+        print(e)
+        return jsonify({"error": f"Error decoding image data: {e}"}), 400
+
+    # Save image to temporary file
+    try:
+        with open("image.png", "wb") as f:
+            f.write(binary_data)
+    except Exception as e:
+        print(e)
+        return jsonify({"error": f"Error saving image: {e}"}), 500
+
+    return jsonify({"message": "success"})
+
+
+def getGenAIResponse(prompt: str):
+    # Use gemini-pro-vision model
+    model = genai.GenerativeModel('gemini-pro-vision')
+
+    # Read image from file
+    try:
+        image_content = Image.open("image.png")
+    except Exception as e:
+        raise FileNotFoundError(e)
+
+    try:
+        response = model.generate_content([prompt, image_content])
+        response.resolve()
+
+        return response.text
+    except Exception as e:
+        raise Exception(e)
+
+
+@app.route("/getDataResponse", methods=["GET"])
+def get_data_response():
+    # Define prompt (can be customized)
+    prompt = "Explain it to me like I'm 5. I have 0 knowledge of python so please tailor answer to my proficiency. Also explain some code concepts if possible"
+    try:
+        return jsonify({"response": getGenAIResponse(prompt)}), 200
+    except FileNotFoundError as e:
+        return jsonify({"error": f"Error reading image: {e}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Error generating content: {e}"}), 500
+
+
+@app.route("/getUserResponse", methods=["POST"])
+def get_user_response():
+    prompt = request.json["message"]
+
+    try:
+        return jsonify({"response": getGenAIResponse(prompt)}), 200
+    except FileNotFoundError as e:
+        return jsonify({"error": f"Error reading image: {e}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Error generating content: {e}"}), 500
 
 # Start listening on given port
 if __name__ == '__main__':
