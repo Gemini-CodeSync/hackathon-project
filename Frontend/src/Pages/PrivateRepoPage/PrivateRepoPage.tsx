@@ -1,28 +1,43 @@
 import { useLocation } from 'react-router';
 import './PrivateRepoPage.css'
-import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key, useState } from 'react';
+import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key, useState, useEffect } from 'react';
 
 const PrivateRepoPage = () => {
   const location = useLocation();
   const extractedData = location.state?.extractedData || [];
 
   const [privateRepoLink, setPrivateRepoLink] = useState('');
- 
-  const sendPrivateRepoLink = async()=>{
+  const [username, setUsername] = useState('');
+  const [accessToken, setAccessToken] = useState('');
+
+  useEffect(()=>{
     chrome.storage.local.get("accessToken", async function(result){
       if(result.accessToken){
-        chrome.storage.local.get("username", async function(result){
-          console.log("RESULT", result.accessToken)
-          const response = await fetch('http://localhost:3000/storeFiles', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({repoPath: privateRepoLink, username: result.username, access_token: result.accessToken}),
-        })
-        const data = await response.json()
-        console.log(data);
-  })}})
+        const result_access_token = result.accessToken
+        console.log("access token found:", result_access_token);
+        setAccessToken(result_access_token)
+      }})
+    chrome.storage.local.get("username", async function(result){
+      if(result.username){
+        console.log("Username found:", result.username);
+        setUsername(result.username);
+      }
+    })
+
+  }, [])
+ 
+ 
+  const sendPrivateRepoLink = async()=>{
+    const response = await fetch('http://localhost:3000/storeFiles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({repoPath: privateRepoLink, username: username, githubToken: accessToken}),
+    })
+    const data = await response.json()
+    console.log(data);
+
   }
 
   return (

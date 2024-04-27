@@ -5,34 +5,36 @@ const PublicRepoPage = () => {
   const [repoLink, setRepoLink] = useState('');
   const [username, setUsername] = useState('');
   const [accessToken, setAccessToken] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
 
-  useEffect(()=>{
+  useEffect(() => {
     chrome.storage.local.get("accessToken", async function(result){
       if(result.accessToken){
         const result_access_token = result.accessToken
         console.log("access token found:", result_access_token);
         setAccessToken(result_access_token)
-      }})
+      }
+    });
     chrome.storage.local.get("username", async function(result){
       if(result.username){
         console.log("Username found:", result.username);
         setUsername(result.username);
       }
-    })
-
+    });
   }, [])
- 
-  const sendRepoLink = async()=>{  
+
+  const sendRepoLink = async () => {
+    setLoading(true); // Set loading state to true when the button is clicked
     const response = await fetch('http://localhost:3000/storeFiles', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({repoPath: repoLink, username: username, githubToken: accessToken}),
-  })
-  const data = await response.json()
-  console.log(data);
-
+    });
+    const data = await response.json();
+    console.log(data);
+    setLoading(false); // Set loading state to false when the response is received
   }
 
   return (
@@ -46,7 +48,13 @@ const PublicRepoPage = () => {
         <input type="text" placeholder="Enter github link....." value={repoLink} onChange={(e)=>{setRepoLink(e.target.value)}} />
       </div>
 
-      <button style={{marginLeft: '10%', marginRight: '8%', width:'32%'}}><a href='#/chatPage' style={{color:'white'}} onClick={sendRepoLink}>Proceed</a></button>
+      <button style={{marginLeft: '10%', marginRight: '8%', width:'32%', position: 'relative'}} onClick={sendRepoLink}>
+        {loading ? ( // Conditionally render button content based on loading state
+          <span>Loading...</span>
+        ) : (
+          <a href='#/chatPage' style={{color:'white'}}>Proceed</a>
+        )}
+      </button>
       <button><a href='#/github' style={{color:'white'}}>Return Home</a></button><br/>
       <p className="home-p">New to this extension? Let's check out some FAQs</p>
     </>

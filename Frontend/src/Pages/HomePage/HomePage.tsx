@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './HomePage.css'
 import { useNavigate } from 'react-router';
 
-const CLIENT_ID = import.meta.env.CLIENT_ID;
+const CLIENT_ID = import.meta.env.VITE_APP_CLIENT_ID;
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

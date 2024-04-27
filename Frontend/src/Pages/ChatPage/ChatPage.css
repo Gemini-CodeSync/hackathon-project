@@ -1,0 +1,8 @@
+.model-message {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 80%; 
+    float: left;
+    clear: both;
+  }

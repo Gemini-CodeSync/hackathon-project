@@ -17,13 +17,23 @@
         "default_title": "CodeSync",
         "default_popup": "index.html"
     },
+    "side_panel":{
+        "default_icon":{
+            "16": "gemini.png",
+            "24": "gemini.png",
+            "32": "gemini.png"
+        },
+        "default_title": "CodeSync",
+        "default_path": "index.html"
+    },
     "permissions": [
         "scripting",
         "tabs",
         "storage",
         "activeTab",
         "identity",
-        "webNavigation"
+        "webNavigation",
+        "sidePanel"
     ],
     "host_permissions": [
         "http://*/*",

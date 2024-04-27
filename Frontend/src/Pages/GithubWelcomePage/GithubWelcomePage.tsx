@@ -9,6 +9,7 @@ const GithubWelcomePage = () => {
 
   useEffect(()=>{
     console.log("Extracted Username:", extractedUsername);
+    chrome.sidePanel.open;
   }, [extractedUsername])
 
 
@@ -55,8 +56,6 @@ const GithubWelcomePage = () => {
     <>
       <h1 className='first-h1'>Hello, {extractedUsername}</h1>
       <h1 className='second-h1'> Let's take advantage of premium features</h1>
-
-      <button className='scan-btn my-btn'>Scan Now</button><br/>
       
       <p className='home-p github-p'>Please choose one of the premium features</p><br/>
       <button className='public-repo'><a href="#/publicRepo" className='public-repo-a'>Import Public Github Repositories</a></button><br/>
