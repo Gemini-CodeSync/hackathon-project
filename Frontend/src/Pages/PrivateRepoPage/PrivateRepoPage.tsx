@@ -9,6 +9,7 @@ const PrivateRepoPage = () => {
   const [privateRepoLink, setPrivateRepoLink] = useState('');
   const [username, setUsername] = useState('');
   const [accessToken, setAccessToken] = useState('');
+  const [branchName, setBranchName] = useState('');
 
   useEffect(()=>{
     chrome.storage.local.get("accessToken", async function(result){
@@ -33,7 +34,7 @@ const PrivateRepoPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({repoPath: privateRepoLink, username: username, githubToken: accessToken}),
+        body: JSON.stringify({repoPath: privateRepoLink, username: username, githubToken: accessToken, branch: branchName}),
     })
     const data = await response.json()
     console.log(data);
@@ -53,6 +54,10 @@ const PrivateRepoPage = () => {
         <option key={index} value={repo.htmlUrl}>{repo.fullName}</option>
       ))}
     </select>
+
+    <div className='input-box' style={{width:'85%', marginLeft: '10%', marginTop: '5px', marginBottom: "10px"}}>
+        <input type="text" placeholder="Enter the exact branch name" value={branchName} onChange={(e)=>{setBranchName(e.target.value)}} />
+      </div>
 
       <button style={{marginLeft:'29px', width:'35%', marginRight: '25px'}}><a href='#/chatPage' style={{color:'white'}} onClick={sendPrivateRepoLink}>Proceed</a></button>
       <button><a href="#/github" style={{color:'white'}}>Return Home</a></button><br/>

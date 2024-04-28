@@ -5,7 +5,8 @@ const PublicRepoPage = () => {
   const [repoLink, setRepoLink] = useState('');
   const [username, setUsername] = useState('');
   const [accessToken, setAccessToken] = useState('');
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false); 
+  const [branchName, setBranchName] = useState('');
 
   useEffect(() => {
     chrome.storage.local.get("accessToken", async function(result){
@@ -30,7 +31,7 @@ const PublicRepoPage = () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({repoPath: repoLink, username: username, githubToken: accessToken}),
+      body: JSON.stringify({repoPath: repoLink, username: username, githubToken: accessToken, branch: branchName}),
     });
     const data = await response.json();
     console.log(data);
@@ -47,6 +48,10 @@ const PublicRepoPage = () => {
       <div className='input-box' style={{width:'85%', marginLeft: '10%', marginTop: '5px', marginBottom: "10px"}}>
         <input type="text" placeholder="Enter github link....." value={repoLink} onChange={(e)=>{setRepoLink(e.target.value)}} />
       </div>
+
+      <div className='input-box' style={{width:'85%', marginLeft: '10%', marginTop: '5px', marginBottom: "10px"}}>
+        <input type="text" placeholder="Enter the exact branch name" value={branchName} onChange={(e)=>{setBranchName(e.target.value)}} />
+    </div>
 
       <button style={{marginLeft: '10%', marginRight: '8%', width:'32%', position: 'relative'}} onClick={sendRepoLink}>
         {loading ? ( // Conditionally render button content based on loading state

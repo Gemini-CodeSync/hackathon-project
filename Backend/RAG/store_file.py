@@ -18,7 +18,7 @@ FILE_EXTENSIONS = (".py", ".java", ".cpp", ".cs", ".js", "jsx", ".html", ".css",
 
 
 # loads requested files from gitHub, returns them in document format with some metadata
-def github_file_loader(repo_path, github_token, branch="main"):
+def github_file_loader(repo_path, github_token, branch):
     loader = GithubFileLoader(
         access_token=github_token,
         repo=repo_path,
@@ -29,13 +29,11 @@ def github_file_loader(repo_path, github_token, branch="main"):
     try:
         return loader.load()
     except Exception as e:
-        if branch != "main":
-            raise Exception("There was an error loading the files from github")
-        else:
-            return github_file_loader(repo_path, github_token, "master")
+        print(e)
+        raise Exception("There was an error loading the files from github")
 
 
-# This function will split the characters in chunks, chunk size is set 1000
+# This function will split the characters in chunks, chunk size is set 1000cd 
 def split_text(documents: list[Document]):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
@@ -69,7 +67,7 @@ def save_to_chroma(chunks: list[Document], user_name):
         raise Exception("There was an error saving the chunks to DB")
 
 
-def load_files(repo_path, user_name, github_token):
-    documents = github_file_loader(repo_path, github_token)
+def load_files(repo_path, user_name, github_token, branch):
+    documents = github_file_loader(repo_path, github_token, branch)
     chunks = split_text(documents)
     save_to_chroma(chunks, user_name)

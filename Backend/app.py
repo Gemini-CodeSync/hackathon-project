@@ -70,6 +70,7 @@ def store_files():
     repo_link = request_data["repoPath"]
     username = request_data["username"]
     github_token = request_data["githubToken"]
+    branch_name = request_data["branch"]
 
     #parsing github link to create path format in username/repoName
     parsed_url = urlparse(repo_link)
@@ -80,7 +81,7 @@ def store_files():
 
     # Calling the load_file Function with all the parameters
     try:
-        load_files(repo_path, username, github_token)
+        load_files(repo_path, username, github_token, branch_name)
         return "Database created successfully", 201
     except Exception as e:
         print(e)
