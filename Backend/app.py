@@ -51,7 +51,6 @@ def getUserData():
 @app.route("/getUserRepos", methods=["GET"])
 def getUserRepos():
     authorization_token = request.headers.get("authorization")
-    print(authorization_token)
     response = requests.get("https://api.github.com/user/repos", headers={
         "Authorization": authorization_token
     })
@@ -82,9 +81,8 @@ def store_files():
     # Calling the load_file Function with all the parameters
     try:
         load_files(repo_path, username, github_token, branch_name)
-        return "Database created successfully", 201
+        return jsonify({"message": "Database created successfully"}), 201
     except Exception as e:
-        print(e)
         return "Database couldn't be created", 500
 
 
@@ -96,7 +94,6 @@ def start_chat_endpoint():
         response = start_chat(username)
         return jsonify(response), 200
     except Exception as e:
-        print(e)
         return "Chat couldn't be started", 500
 
 
@@ -104,7 +101,6 @@ def start_chat_endpoint():
 @app.route("/sendMessage", methods=["POST"])
 def send_message():
     request_data = request.get_json()
-    print(request_data)
 
     # Exacting all the date required as parameters to call the function
     user_text_query = request_data["userTextQuery"]
@@ -114,11 +110,9 @@ def send_message():
     # Calling the process_query function to process the request and return a response
     try:
         response = process_query(user_text_query, chat_history, username)
-        print(response)
         return jsonify(response), 200
     except Exception as e:
-        print(e)
-        return "Message couldn't be processed", 500
+        return jsonify({"error": f"Message couldn't be processed: {e}"}), 500
 
 
 @app.route("/performOCR", methods=["POST"])
@@ -130,7 +124,6 @@ def perform_ocr():
     try:
         binary_data = base64.b64decode(base64_data)
     except Exception as e:
-        print(e)
         return jsonify({"error": f"Error decoding image data: {e}"}), 400
 
     # Save image to temporary file
@@ -138,7 +131,6 @@ def perform_ocr():
         with open("image.png", "wb") as f:
             f.write(binary_data)
     except Exception as e:
-        print(e)
         return jsonify({"error": f"Error saving image: {e}"}), 500
 
     return jsonify({"message": "success"})

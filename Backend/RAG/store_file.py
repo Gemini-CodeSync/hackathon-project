@@ -12,7 +12,7 @@ load_dotenv()
 base_db_url = "data"
 
 FILE_EXTENSIONS = (".py", ".java", ".cpp", ".cs", ".js", "jsx", ".html", ".css", ".sh", ".md", ".ts", ".tsx", ".php",
-                   ".rb", ".swift", ".go", ".kt", ".lua", ".c", ".h", ".xml", ".json", ".yml", ".bat", ".dart",
+                   ".rb", ".swift", ".go", ".kt", ".lua", ".c", ".h", ".xml", ".yml", ".bat", ".dart",
                    ".scala", ".sql", ".rust", ".txt"
                    )
 
@@ -29,14 +29,28 @@ def github_file_loader(repo_path, github_token, branch):
     try:
         return loader.load()
     except Exception as e:
-        print(e)
         raise Exception("There was an error loading the files from github")
 
 
-# This function will split the characters in chunks, chunk size is set 1000cd 
+# Internal function to return the file name from a path
+def get_filename(filepath):
+    filename_start = filepath.rfind("/") + 1
+    return filepath[filename_start:]
+
+
+# function to clean the metadata
+def clean_documents(documents: [Document]):
+    for document in documents:
+        try:
+            document.metadata["source"] = get_filename(document.metadata["source"])
+        except Exception as e:
+            continue
+    return documents
+
+# This function will split the characters in chunks, chunk size is set 2000cd
 def split_text(documents: list[Document]):
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
+        chunk_size=2000,
         chunk_overlap=400,
         length_function=len,
         add_start_index=True,
@@ -47,7 +61,11 @@ def split_text(documents: list[Document]):
 # This function will save the chunks to the desired path for future retrival
 def save_to_chroma(chunks: list[Document], user_name):
     db_path = base_db_url + "/" + user_name
-    # Clear out the database first.
+
+    # create a temp path to store the DB initially avoid conflicts with existing dbs
+    temp_db_path = base_db_url + "/temp_" + user_name
+
+    # Clear out the database first, this process takes time and interferes with schedular
     if os.path.exists(db_path):
         shutil.rmtree(db_path)
 
@@ -60,14 +78,17 @@ def save_to_chroma(chunks: list[Document], user_name):
     # Save the chunks to DB
     try:
         db = Chroma.from_documents(
-            chunks, embeddings, persist_directory=db_path
+            chunks, embeddings, persist_directory=temp_db_path
         )
         db.persist()
+        # Move the db to the final path
+        os.rename(temp_db_path, db_path)
     except Exception as e:
         raise Exception("There was an error saving the chunks to DB")
 
 
 def load_files(repo_path, user_name, github_token, branch):
-    documents = github_file_loader(repo_path, github_token, branch)
+    raw_documents = github_file_loader(repo_path, github_token, branch)
+    documents = clean_documents(raw_documents)
     chunks = split_text(documents)
     save_to_chroma(chunks, user_name)
