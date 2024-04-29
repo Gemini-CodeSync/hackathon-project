@@ -9,6 +9,7 @@ It utilizes a variety of APIs, Google Gemini and JS Frameworks along with integr
 **API's Utilized:**
 
 - Langchain
+- Chrome API
 - GitHub Authentication API
 - langchain_community
 - unstructured # Document loading
@@ -19,6 +20,13 @@ It utilizes a variety of APIs, Google Gemini and JS Frameworks along with integr
 - python-dotenv
 - langchain-text-splitters
 - chromadb
+
+**Tech Stack Used:**
+
+- Python
+- Flask
+- TypeScript + Vite
+- Github Oauth Apps
 
 **Requirements:**
 
