@@ -98,6 +98,7 @@ def process_query(user_text_query: str, chat_history: dict, username: str):
 
     # Building prompt
     prompt = construct_prompt(user_text_query, retrieved_documents)
+    print(prompt)
 
     # Decode chat_history content list from dictionary
     chat_history = decode_history(chat_history)
