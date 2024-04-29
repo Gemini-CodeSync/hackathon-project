@@ -25,7 +25,7 @@ const PublicRepoPage = () => {
   }, [])
 
   const sendRepoLink = async () => {
-    setLoading(true); // Set loading state to true when the button is clicked
+    setLoading(true); 
     const response = await fetch('http://localhost:3000/storeFiles', {
       method: 'POST',
       headers: {
@@ -33,9 +33,9 @@ const PublicRepoPage = () => {
       },
       body: JSON.stringify({repoPath: repoLink, username: username, githubToken: accessToken, branch: branchName}),
     });
-    const data = await response.json();
-    console.log(data);
-    setLoading(false); // Set loading state to false when the response is received
+    console.log(response);
+    setLoading(false); 
+    window.location.href='#/chatPage';
   }
 
   return (
@@ -54,8 +54,8 @@ const PublicRepoPage = () => {
     </div>
 
       <button style={{marginLeft: '10%', marginRight: '8%', width:'32%', position: 'relative'}} onClick={sendRepoLink}>
-        {loading ? ( // Conditionally render button content based on loading state
-          <span>Loading...</span>
+        {loading ? ( 
+          <a style={{color:'white'}}>Importing....</a>
         ) : (
           <a href='#/chatPage' style={{color:'white'}}>Proceed</a>
         )}
