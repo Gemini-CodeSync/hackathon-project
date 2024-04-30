@@ -7,6 +7,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.document_loaders import GithubFileLoader
 
+from Backend.RAG.tacker import save_new_file
+
 load_dotenv()
 
 base_db_url = "data"
@@ -50,7 +52,7 @@ def clean_documents(documents: [Document]):
 # This function will split the characters in chunks, chunk size is set 2000cd
 def split_text(documents: list[Document]):
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=2000,
+        chunk_size=3000,
         chunk_overlap=400,
         length_function=len,
         add_start_index=True,
@@ -60,14 +62,8 @@ def split_text(documents: list[Document]):
 
 # This function will save the chunks to the desired path for future retrival
 def save_to_chroma(chunks: list[Document], user_name):
-    db_path = base_db_url + "/" + user_name
-
-    # create a temp path to store the DB initially avoid conflicts with existing dbs
-    temp_db_path = base_db_url + "/temp_" + user_name
-
-    # Clear out the database first, this process takes time and interferes with schedular
-    if os.path.exists(db_path):
-        shutil.rmtree(db_path)
+    directory_name = save_new_file(username=user_name, base_db_url=base_db_url)
+    db_path = base_db_url + "/" + directory_name
 
     # Set the embeddings function
     try:
@@ -78,11 +74,9 @@ def save_to_chroma(chunks: list[Document], user_name):
     # Save the chunks to DB
     try:
         db = Chroma.from_documents(
-            chunks, embeddings, persist_directory=temp_db_path
+            chunks, embeddings, persist_directory=db_path
         )
         db.persist()
-        # Move the db to the final path
-        os.rename(temp_db_path, db_path)
     except Exception as e:
         raise Exception("There was an error saving the chunks to DB")
 

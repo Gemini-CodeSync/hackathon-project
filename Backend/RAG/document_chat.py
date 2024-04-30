@@ -6,6 +6,7 @@ from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from google.generativeai.types import content_types
+from Backend.RAG.tacker import get_directory_name
 
 load_dotenv()
 
@@ -33,7 +34,9 @@ No action needed for now just greet the user by asking to talk about a section o
 
 # Function to initialize vector DB model
 def initialize_db(user_name: str):
-    chroma_path = base_db_url + "/" + user_name
+    directory_name = get_directory_name(username=user_name)
+
+    chroma_path = base_db_url + "/" + directory_name
     if not os.path.exists(chroma_path):
         raise FileNotFoundError(f"Path {chroma_path} does not exist.")
 
@@ -98,7 +101,6 @@ def process_query(user_text_query: str, chat_history: dict, username: str):
 
     # Building prompt
     prompt = construct_prompt(user_text_query, retrieved_documents)
-    print(prompt)
 
     # Decode chat_history content list from dictionary
     chat_history = decode_history(chat_history)
