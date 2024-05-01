@@ -21,7 +21,7 @@ It utilizes a variety of APIs, Google Gemini and JS Frameworks along with integr
 - langchain-text-splitters
 - chromadb
 
-**Tech Stack Used:**
+**Tech Stack Used:** 
 
 - Python
 - Flask
