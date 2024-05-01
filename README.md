@@ -37,7 +37,14 @@ It utilizes a variety of APIs, Google Gemini and JS Frameworks along with integr
 
 **Video Demo:**
 
-[Insert Link to Video (YouTube Link)]
+[https://www.youtube.com/@GeminiCodeSync](https://youtu.be/dOmVkB_Ahxw)
+
+
+**Project Link:**
+
+https://devpost.com/software/gemini-codesync
+
+
 
 **Photos of utilizing plugin:**
 
