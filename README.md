@@ -35,20 +35,19 @@ It utilizes a variety of APIs, Google Gemini and JS Frameworks along with integr
 - Internet Connection
 - Available Repository
 
+<br />
+
 **Video Demo:**
 
-[https://www.youtube.com/@GeminiCodeSync](https://youtu.be/5r4tGGZfIOE)
+![demo](https://github.com/Gemini-CodeSync/hackathon-project/assets/44122973/61246843-082c-4f32-8da4-a0e072294a91)
 
+More on: [https://www.youtube.com/@GeminiCodeSync](https://youtu.be/5r4tGGZfIOE)
+<br /><br />
 
 **Project Link:**
 
 https://devpost.com/software/gemini-codesync
-
-
-
-**Photos of utilizing plugin:**
-
--- Place Photos here
+<br /><br />
 
 ## Setting up chrome extension on your machine:
 
