@@ -39,7 +39,8 @@ It utilizes a variety of APIs, Google Gemini and JS Frameworks along with integr
 
 **Video Demo:**
 
-![demo](https://github.com/Gemini-CodeSync/hackathon-project/assets/44122973/61246843-082c-4f32-8da4-a0e072294a91)
+![final gif](https://github.com/Gemini-CodeSync/hackathon-project/assets/44122973/b463979c-0621-463b-84c0-4fb47718b889)
+
 
 More on: [https://www.youtube.com/@GeminiCodeSync](https://youtu.be/5r4tGGZfIOE)
 <br /><br />
