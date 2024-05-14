@@ -6,7 +6,7 @@ from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from google.generativeai.types import content_types
-from Backend.RAG.tacker import get_directory_name
+from .tacker import get_directory_name
 
 load_dotenv()
 

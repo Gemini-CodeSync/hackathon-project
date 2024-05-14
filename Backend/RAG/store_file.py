@@ -7,7 +7,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.document_loaders import GithubFileLoader
 
-from Backend.RAG.tacker import save_new_file
+from .tacker import save_new_file
 
 load_dotenv()
 
