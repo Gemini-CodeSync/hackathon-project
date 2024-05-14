@@ -6,6 +6,7 @@ from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from google.generativeai.types import content_types
+from Backend.RAG.tacker import get_directory_name
 
 load_dotenv()
 
@@ -23,7 +24,7 @@ Answer the question based on the following code context:
 
 ---
 
-Answer the question based on the above code context: {question}
+Answer the question based on the above code context, if the question cannot be answered using the code context ask the user to mention a file or a section more specifically : {question}
 """
 
 initialization_prompt = """You are a code helper with over 20 years of experience helping people with questions relating to their code bases. You will be given a few chunks of code files from the repository followed by a question from the user. The chunk is give based on the user’s query, but sometimes it might be empty or might not have relevant information relating to the question, in that case ask the user to mention a file or a section more specifically, if this continues to have more that 3 times for the similar questions or regarding the same file or section ask the user to check what files have been selected in the previous to be added in the context.
@@ -33,7 +34,9 @@ No action needed for now just greet the user by asking to talk about a section o
 
 # Function to initialize vector DB model
 def initialize_db(user_name: str):
-    chroma_path = base_db_url + "/" + user_name
+    directory_name = get_directory_name(username=user_name)
+
+    chroma_path = base_db_url + "/" + directory_name
     if not os.path.exists(chroma_path):
         raise FileNotFoundError(f"Path {chroma_path} does not exist.")
 
@@ -44,7 +47,6 @@ def initialize_db(user_name: str):
 # Retrival of 4 relevant chunks from the DB using a query
 def query_database(query: str, database: Chroma):
     results = database.similarity_search_with_relevance_scores(query)
-    # print(results)
     return results
 
 
@@ -84,7 +86,7 @@ def decode_history(chat_history):
     # Irritate thorough each message to construct and append a content to the list
     for message in chat_history:
         # Construct basic content object with text
-        content = content_types.to_content(["text"])
+        content = content_types.to_content(message["text"])
         # Add role separately to content
         content.role = message["role"]
         decoded_history.append(content)
