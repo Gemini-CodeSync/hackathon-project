@@ -6,33 +6,41 @@ Gemini CodeSync is a Chrome extension that provides real-time, personalized code
 
 It utilizes a variety of APIs, Google Gemini and JS Frameworks along with integration with GitHub for you to be able to get code explained to you with the ability to utilize private and public GitHub Repository's to allow for ease of access.
 
+**API's Utilized:**
 
-API's Utilized:
- Langchain,
- GitHub Authentication API,
- langchain_community,
-unstructured # Document loading,
-chromadb # Vector storage,
-langchain-google-genai # For embeddings,
-langchain_core,
-google-generativeai,
-python-dotenv,
-langchain-text-splitters,
-chromadb
+- Langchain
+- Chrome API
+- GitHub Authentication API
+- langchain_community
+- unstructured # Document loading
+- chromadb # Vector storage
+- langchain-google-genai # For embeddings
+- langchain_core
+- google-generativeai
+- python-dotenv
+- langchain-text-splitters
+- chromadb
 
- 
-Requirements:
- A Github Account with API Access
- 
- Google Chrome or Chromium-based Web Browser
- 
- Internet Connection
- 
- Available Repository 
+**Tech Stack Used:**
 
- Video Demo: --- Insert Link to Video (YouTube Link)
+- Python
+- Flask
+- TypeScript + Vite
+- Github Oauth Apps
 
- Photos of utilizing plugin:
-  -- Place Photos here
+**Requirements:**
+
+- A Github Account with API Access
+- Google Chrome or Chromium-based Web Browser
+- Internet Connection
+- Available Repository
+
+**Video Demo:**
+
+[Insert Link to Video (YouTube Link)]
+
+**Photos of utilizing plugin:**
+
+-- Place Photos here
 
   

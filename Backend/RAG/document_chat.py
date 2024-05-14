@@ -7,6 +7,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from google.generativeai.types import content_types
 from .tacker import get_directory_name
+from Backend.RAG.tacker import get_directory_name
 
 load_dotenv()
 
@@ -101,7 +102,6 @@ def process_query(user_text_query: str, chat_history: dict, username: str):
 
     # Building prompt
     prompt = construct_prompt(user_text_query, retrieved_documents)
-    print(prompt)
 
     # Decode chat_history content list from dictionary
     chat_history = decode_history(chat_history)
